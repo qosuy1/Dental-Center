@@ -1,0 +1,37 @@
+body {
+  font-family: "Tajawal", sans-serif;
+  text-align: right;
+}
+* {
+  direction: rtl;
+}
+.layout-wrap {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.section-menu-left {
+  width: 280px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  margin-left: 0;
+  margin-right: 20px;
+}
+.section-content-right {
+  flex: 1;
+  overflow: hidden;
+}
+.menu-list,
+.sub-menu {
+  padding-right: 0;
+}
+@media (max-width: 991px) {
+  .layout-wrap {
+    flex-direction: column;
+  }
+  .section-menu-left {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+}

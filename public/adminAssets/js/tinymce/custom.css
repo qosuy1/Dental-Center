@@ -1,0 +1,14 @@
+/* my custom style file  */
+
+
+
+/* Force black cursor and other custom styles */
+body {
+    caret-color: black !important;
+    /* Black cursor */
+}
+
+/* Add other TinyMCE-specific styles if needed */
+.tox-tinymce .tox-edit-area__iframe {
+    caret-color: black !important;
+}
