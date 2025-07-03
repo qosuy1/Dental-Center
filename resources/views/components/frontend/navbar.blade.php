@@ -3,7 +3,7 @@
     <div class="logo">
         <div class="flex items-center">
             <i class="fas fa-tooth text-2xl  mr-3"></i>
-            <span class="text-xl font-bold ">City Smiles Clinic</span>
+            <span class="text-xl font-bold ">Dental Center</span>
         </div>
     </div>
     <div class="menu-toggle" id="mobile-menu">

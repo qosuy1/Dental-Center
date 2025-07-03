@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
+        // User::factory(10)->create();
 
         $user = User::create([
             'name' => 'Qusay SuperAdmin',
@@ -33,12 +33,13 @@ class DatabaseSeeder extends Seeder
 
         $this->call(PermissionSeeder::class);
 
-        $user = User::first();
+        $user = User::where('email' , 'kosaykm71@gmail.com')->first();
         $role = Role::find(1);
 
         $permissionIds = Permission::pluck('id');
         $role->syncPermissions($permissionIds);
 
         $user->assignRole('Super Admin') ;
+
     }
 }

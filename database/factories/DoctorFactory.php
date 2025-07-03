@@ -17,6 +17,7 @@ class DoctorFactory extends Factory
      */
     public function definition(): array
     {
+        $departmentsId = Department::pluck('id')->toArray() ;
         return [
             'name' => fake()->name(),
             'experince' => fake()->jobTitle(),
@@ -25,7 +26,7 @@ class DoctorFactory extends Factory
             'linkedin' =>fake()->unique()->url(),
             'facebook' => fake()->unique()->url(),
             'image'=> "https://picsum.photos/seed/" . rand(0, 100000) . "/100",
-            'department_id'=> Department::factory()->create()
+            'department_id'=>$departmentsId[ array_rand($departmentsId)]
         ];
     }
 }

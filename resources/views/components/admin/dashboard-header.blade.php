@@ -27,7 +27,7 @@
                             </span>
                             <span class="flex flex-column">
                                 <span class="body-title mb-2">{{ Auth::user()->name }}</span>
-                                <span class="text-tiny">{{ Auth::user()->roles->first()->name }}</span>
+                                <span class="text-tiny">{{ Auth::user()->roles->first()->name ?? ""}}</span>
                             </span>
                         </span>
                     </button>

@@ -16,7 +16,7 @@ class FrontendController extends Controller
 {
     public function index()
     {
-        $departments = Department::all();
+        $departments = Department::take(4)->orderBy('created_at')->get();
         $blogs = Blog::with('doctor')->get();
 
         return view('frontend.index', compact(['departments', 'blogs']));
@@ -26,7 +26,7 @@ class FrontendController extends Controller
     public function aboutUs()
     {
         $settings = Setting::all(['google_map_location', 'our_story', 'about_us_image'])->first();
-        $doctors = Doctor::get();
+        $doctors = Doctor::simplePaginate(8);
         // dd($settings->google_map_location);
         return view('frontend.about-us', compact(['settings', 'doctors']));
     }
@@ -58,7 +58,7 @@ class FrontendController extends Controller
             $query->where('title', 'like', "%{$search}%");
         }
 
-        $cases = $query->with('doctor')->orderBy('updated_at', $sort)->simplePaginate(8);
+        $cases = $query->with('doctor')->orderBy('updated_at', $sort)->simplePaginate(6);
 
         return view('frontend.cases', compact(['cases']));
     }
@@ -82,7 +82,7 @@ class FrontendController extends Controller
             $query->where('title', 'like', "%{$search}%");
         }
 
-        $blogs = $query->with('doctor')->orderBy('updated_at' , $sort)->simplePaginate(8);
+        $blogs = $query->with('doctor')->orderBy('updated_at' , $sort)->simplePaginate(6);
 
         // $blogs = Blog::with('doctor')->simplePaginate(8);
 

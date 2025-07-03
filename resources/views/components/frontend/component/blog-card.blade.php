@@ -3,7 +3,7 @@
 
 <div class="blog-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
     <div class="h-48 overflow-hidden">
-        <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="w-full h-full object-cover" loading="lazy">
+        <img src="{{ $blog->image }}" alt="{{ $blog->title }}" class="w-full h-full object-cover" loading="lazy">
     </div>
     <div class="p-6">
         <div class="flex items-center text-sm text-gray-500 mb-2">
@@ -19,7 +19,7 @@
         <p class="text-gray-600 mb-4">{{ $blog->smallDesc }}</p>
         <div class="flex items-center">
             <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden mr-2">
-                <img src="{{ $blog->doctor ? asset('storage/' . $blog->doctor->image) : asset('adminAssets/images/avatar/user.jpeg') }}"
+                <img src="{{ $blog->doctor ?  $blog->doctor->image : asset('adminAssets/images/avatar/user.jpeg') }}"
                     alt="{{ $blog->doctor_name }}" class="w-full h-full object-cover" loading="lazy">
             </div>
             <span class="text-sm text-gray-600">{{ $blog->doctor_name }}</span>

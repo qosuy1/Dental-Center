@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Doctor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,15 @@ class BlogFactory extends Factory
      */
     public function definition(): array
     {
+        $doctorId = Doctor::pluck('id')->toArray();
+
         return [
-            //
+            'title' => fake()->text(100),
+            'content' => fake()->paragraph(10),
+            'smallDesc' => fake()->text(),
+            'image' => "https://picsum.photos/seed/" . rand(0, 100000) . "/100",
+            'doctor_id' => $doctorId[array_rand($doctorId)],
+            'doctor_name' =>  Doctor::find($doctorId)->pluck('name')
         ];
     }
 }

@@ -4,7 +4,7 @@
 
 <div class="case-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
     <div class="h-48 overflow-hidden relative">
-        <img src="{{ asset('storage/' . $case->after_image) }}" alt="{{ $case->title }}"
+        <img src="{{ $case->after_image }}" alt="{{ $case->title }}"
             class="w-full h-full object-cover" loading="lazy"/>
         @if ($case->is_special_case == 1)
             <div class="absolute bottom-2 left-2">
@@ -29,7 +29,7 @@
 
         <div class="flex items-center">
             <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden mr-2">
-                <img src="{{ $case->doctor ? asset('storage/' . $case->doctor->image) : asset('adminAssets/images/avatar/user.jpeg') }}"
+                <img src="{{ $case->doctor ? $case->doctor->image : asset('adminAssets/images/avatar/user.jpeg') }}"
                     alt="{{ $case->doctor->name ?? $case->doctor_name }}" class="w-full h-full object-cover" loading="lazy"/>
             </div>
             <span class="text-sm text-gray-600">{{ $case->doctor->name ?? $case->doctor_name }}</span>

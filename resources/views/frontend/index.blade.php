@@ -71,7 +71,7 @@
                     @forelse ($blogs->take(3) as $blog)
                         <div
                             class="bg-white rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg flex flex-col items-center w-full md:w-[47%] lg:w-[31%]">
-                            <img src="{{ asset('storage/' . $blog->image) }}" alt="Dental care"
+                            <img src="{{ $blog->image }}" alt="Dental care"
                                 class="w-full h-48 object-cover" />
                             <div class="p-6 flex flex-col items-center">
                                 <div class="flex items-center text-sm text-gray-500 mb-2 justify-center">

@@ -17,10 +17,10 @@ class DepartmentFactory extends Factory
     public function definition(): array
     {
         return [
-            "title" => fake()->name,
+            "name" => fake()->name,
             "smallDesc" => fake()->text(150),
-            "content" => fake()->paragraph(),
-            "image" => "https://picsum.photos/seed/" . rand(0, 100000) . "/100"
+            // "content" => fake()->paragraph(),
+            // "image" => "https://picsum.photos/seed/" . rand(0, 100000) . "/100"
         ];
     }
 }
