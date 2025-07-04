@@ -23,8 +23,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('adminAssets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('adminAssets/css/style2.css') }}">
 
-    {{-- <link rel="shortcut icon" href="{{ asset('adminAssets/images/favicon.ico') }}">
-    <link rel="apple-touch-icon-precomposed" href="{{ asset('adminAssets/images/favicon.ico') }}"> --}}
 
     {{-- to add a specifice styles --}}
     @stack('styles')

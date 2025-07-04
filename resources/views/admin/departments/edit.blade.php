@@ -11,6 +11,9 @@
                 @csrf
                 @method('PUT')
 
+                <x-admin.forms.icon-picker />
+
+
                 <fieldset class="name">
                     <div class="body-title">العنوان<span class="tf-color-1">*</span></div>
                     <x-admin.forms.input name="name" :object="$department" />

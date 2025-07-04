@@ -22,7 +22,7 @@
             <a href="/">
                 {{-- <x-application-logo class="w-20 h-20 fill-current text-gray-500" /> --}}
                 <h3 style="font-size: 28px; color:#356bde ; font-weight: bolder;"
-                class="" >City Smile</h3>
+                class="" >Dentil Center</h3>
 
             </a>
         </div>

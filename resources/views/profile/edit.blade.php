@@ -63,7 +63,7 @@
 
         {{-- password --}}
         <div class="wg-box my-4">
-            <form method="post" action="{{ route('password.update') }}" class="space-y-4 px-60">
+            <form method="post" action="{{ route('password.update') }}" class="space-y-4">
                 @csrf
                 @method('put')
 

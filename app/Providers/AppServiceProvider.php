@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        
+
         PaginationPaginator::useBootstrapFive();
         Model::unguard();
         Model::preventLazyLoading();
