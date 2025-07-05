@@ -16,12 +16,12 @@ class SpecialCaseController extends Controller
 {
     use uploadImageTrait;
 
-    protected $specialCaseService ;
+    protected $specialCaseService;
 
     public function __construct(SpecialCaseService $specialCaseService)
     {
 
-        $this->specialCaseService = $specialCaseService ;
+        $this->specialCaseService = $specialCaseService;
 
 
         $this->middleware([
@@ -49,14 +49,25 @@ class SpecialCaseController extends Controller
      */
     public function index(Request $request)
     {
-        $sort = $request->input('sort', 'desc');
-
         $query = SpecialCase::query();
 
+        // sort
+        $sort = $request->input('sort', 'desc');
+        // search
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where('name', 'like', "%{$search}%");
         }
+
+        //fillter by cases type
+        if ($request->has('casesType') && $request->input('casesType') != 'allCases') {
+            $casesType = $request->input('casesType');
+            $query->where('is_special_case', $casesType);
+
+        } else
+            $query->whereIn('is_special_case', [0, 1]);
+
+
 
         $specialCases = $query->with('doctor')
             ->orderBy('created_at', $sort)
@@ -88,7 +99,7 @@ class SpecialCaseController extends Controller
 
         // SpecialCase::create($attributes);
 
-        $attributes['is_special_case'] = $request->has('is_special_case') ? 1 : 0 ;
+        $attributes['is_special_case'] = $request->has('is_special_case') ? 1 : 0;
 
         //create special case
         $this->specialCaseService->createSpecialCase($attributes);

@@ -7,7 +7,27 @@
         <x-admin.page-heading title="الحالات الخاصة" />
 
         <div class="wg-box">
-            <x-admin.search-bar-add-button placeholder="(اسم الحالة)" :create_route="route('admin.special-cases.create')" :can="PermissionsEnum::create_case->value" />
+            <x-admin.search-bar-add-button placeholder="(اسم الحالة)" :create_route="route('admin.special-cases.create')" :can="PermissionsEnum::create_case->value">
+
+                <x-slot name="dropdownMenu">
+                    <div class="dropdown">
+                        <button class="tf-button style-1 w2 dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            الحالة
+                        </button>
+                        <ul class="dropdown-menu fs-4">
+                            <li><a class="dropdown-item" href="{{ request()->fullUrlWithQuery(query: ['casesType'=>'allCases']) }}">
+                                كل الحالات</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="{{ request()->fullUrlWithQuery(['casesType' => '1']) }}">حالات مميزة</a></li>
+                            <li><a class="dropdown-item"
+                                    href="{{ request()->fullUrlWithQuery(['casesType' => '0']) }}">حالات عادية</a></li>
+                        </ul>
+                    </div>
+                </x-slot>
+
+            </x-admin.search-bar-add-button>
 
             <div class="wg-table">
                 <div class="table-responsive">

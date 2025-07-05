@@ -60,7 +60,7 @@ class DepartmentController extends Controller
 
         $departments = $query->with(['doctors', 'services'])
             ->orderBy('created_at', $sort)
-            ->simplePaginate(10, ['id', 'name',]);
+            ->Paginate(10, ['id', 'name',]);
 
         return view('admin.departments.index', ['departments' => $departments]);
     }

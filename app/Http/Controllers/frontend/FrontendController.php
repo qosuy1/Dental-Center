@@ -9,17 +9,16 @@ use App\Models\Doctor;
 use App\Models\Setting;
 use App\Models\SpecialCase;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Request as FacadesRequest;
-use PhpParser\Node\Stmt\Case_;
 
 class FrontendController extends Controller
 {
     public function index()
     {
         $departments = Department::take(4)->orderBy('created_at')->get();
-        $blogs = Blog::with('doctor')->get();
+        $blogs = Blog::with('doctor')->take(3)->inRandomOrder()->get();
+        $cases = SpecialCase::with('doctor')->take(3)->inRandomOrder()->get();
 
-        return view('frontend.index', compact(['departments', 'blogs']));
+        return view('frontend.index', compact(['departments', 'blogs' , 'cases']));
     }
 
 
@@ -34,7 +33,7 @@ class FrontendController extends Controller
     public function get_department(string $name)
     {
         $department = Department::where('name', '=', $name)->with(['services', 'doctors'])->first();
-        $cases = SpecialCase::whereIn('doctor_id', $department->doctors()->pluck('id')->toArray())->simplePaginate(6);
+        $cases = SpecialCase::whereIn('doctor_id', $department->doctors()->pluck('id')->toArray())->Paginate(6);
 
 
         /**

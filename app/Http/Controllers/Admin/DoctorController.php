@@ -57,7 +57,7 @@ class DoctorController extends Controller
 
         $doctors = $query->with('department')
             ->orderBy('created_at', $sort)
-            ->simplePaginate(5);
+            ->Paginate(10);
 
 
         return view('admin.doctors.index', compact('doctors'));

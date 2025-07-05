@@ -1,6 +1,6 @@
 <x-frontend.layout>
 
-    <x-frontend.component.head title="{{$department->name}}" description="{{$department->smallDesc}}" />
+    <x-frontend.component.head title="{{ $department->name }}" description="{{ $department->smallDesc }}" />
 
 
     <!-- services -->
@@ -30,47 +30,9 @@
         <h1 class="text-4xl font-bold text-gray-800 my-12 text-indigo-800 ">Our Department Cases </h1>
         <!-- <hr> -->
 
-        {{-- filltring the data--}}
-        <form class="bg-white rounded-xl shadow-lg p-6 mb-8" id="caseFilterForm">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Search Bar -->
-                <div class="relative">
-                    <input type="text" id="searchInput" name="search" placeholder="Search cases..."
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                    <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-                </div>
+        {{-- filltring the data --}}
+        <x-frontend.component.filtering :route="route('blogs')" :isItCase="true" />
 
-                <!-- Date Filter -->
-                <div class="relative">
-                    <select id="dateFilter" name="date"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none">
-                        <option value="all">All Dates</option>
-                        <option value="newest">Newest First</option>
-                        <option value="oldest">Oldest First</option>
-                        <option value="lastMonth">Last Month</option>
-                        <option value="lastYear">Last Year</option>
-                    </select>
-                    <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400"></i>
-                </div>
-
-                <!-- Case Type Filter -->
-                <div class="relative">
-                    <select id="caseTypeFilter" name="caseType"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none">
-                        <option value="all">All Cases</option>
-                        <option value="special">Special Cases Only</option>
-                        <option value="general">General Cases</option>
-                    </select>
-                    <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400"></i>
-                </div>
-            </div>
-            <div class="flex justify-end mt-6">
-                <button type="submit"
-                    class="bg-indigo-600 text-white px-6 py-2 rounded-lg shadow hover:bg-indigo-700 transition font-semibold">
-                    Filter
-                </button>
-            </div>
-        </form>
 
         <!-- Cases Section -->
         <div class="max-w-6xl mx-auto px-4 py-12">
@@ -92,7 +54,6 @@
                 @endforelse
             </div>
             <x-admin.pagination :attribute="$cases" />
-
 </x-frontend.layout>
 
 
