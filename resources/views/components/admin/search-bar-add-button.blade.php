@@ -23,11 +23,10 @@
                 </div>
             </form>
         @endif
-        {{$dropdownMenu}}
+        {{$dropdownMenu ?? ""}}
     </div>
 
     <div class="d-flex gap-4">
-        {{-- {{$dropdownMenu}} --}}
 
         <div class="dropdown">
             <button class="tf-button style-1 w2 dropdown-toggle" type="button" data-bs-toggle="dropdown"
