@@ -86,7 +86,7 @@
                                         <h5 class="text-primary mb-3">صورة قبل:</h5>
                                         @if ($specialCase->before_image)
                                             <div class="image-container">
-                                                <img src="{{ asset('storage/' . $specialCase->before_image) }}"
+                                                <img src="{{ asset( $specialCase->before_image) }}"
                                                     alt="Before" class="img-fluid rounded shadow-sm">
                                             </div>
                                         @else
@@ -103,7 +103,7 @@
                                         <h5 class="text-primary mb-3">صورة بعد:</h5>
                                         @if ($specialCase->after_image)
                                             <div class="image-container">
-                                                <img src="{{ asset('storage/' . $specialCase->after_image) }}"
+                                                <img src="{{ asset( $specialCase->after_image) }}"
                                                     alt="After" class="img-fluid rounded shadow-sm">
                                             </div>
                                         @else

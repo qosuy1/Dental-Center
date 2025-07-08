@@ -12,19 +12,25 @@ class SpecialCaseService extends Controller
 {
     use uploadImageTrait;
 
-    public function createSpecialCase(array $data): SpecialCase
+    public function createSpecialCase(array $data, $request = null): SpecialCase
     {
         // Handle file uploads
         if (isset($data['before_image'])) {
-            $data['before_image'] = $data['before_image']->store('cases/before_images', 'public');
+            // $data['before_image'] = $data['before_image']->store('cases/before_images', 'public');
+            $data['before_image'] = $this->uploadImage($request, null, 'uploads/cases/before_images', 'before_image');
         }
 
         if (isset($data['after_image'])) {
-            $data['after_image'] = $data['after_image']->store('cases/after_images', 'public');
+            // $data['after_image'] = $data['after_image']->store('cases/after_images', 'public');
+            $data['after_image'] = $this->uploadImage($request, null, 'uploads/cases/after_images', 'after_image');
+
         }
 
+
+
+
         // Handle boolean field
-        $data['is_special_case'] = isset($data['is_special_case']) ? 1 : 0 ;
+        $data['is_special_case'] = isset($data['is_special_case']) ? 1 : 0;
 
         $data['doctor_name'] = Doctor::find($data['doctor_id'])->name;
 
@@ -35,13 +41,17 @@ class SpecialCaseService extends Controller
     public function deleteCaseWithImages(SpecialCase $case): void
     {
         $case->delete();
-        if ($case->before_image) {
+        if (file_exists('storage/' . $case->before_image))
             Storage::disk('public')->delete($case->before_image);
-        }
+        elseif (file_exists(public_path($case->before_image)))
+            unlink(public_path($case->before_image));
 
-        if ($case->after_image) {
+
+        if (file_exists('storage/' . $case->after_image))
             Storage::disk('public')->delete($case->after_image);
-        }
+        elseif (file_exists(public_path($case->after_image)))
+            unlink(public_path($case->after_image));
+
 
     }
 }

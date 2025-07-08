@@ -19,7 +19,7 @@
                 @empty(!$blog->image)
                     <div class="row justify-content-center mb-4"> <!-- Center the image horizontally -->
                         <div class="col-12 col-md-8 col-lg-4"> <!-- Adjust column width for different screen sizes -->
-                            <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}"
+                            <img src="{{ asset( $blog->image) }}" alt="{{ $blog->title }}"
                                 class="img-fluid rounded">
                         </div>
                     </div>

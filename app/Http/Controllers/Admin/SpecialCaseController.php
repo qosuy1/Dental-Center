@@ -92,17 +92,10 @@ class SpecialCaseController extends Controller
     {
         $attributes = $request->validated();
 
-        // $attributes['is_special_case'] = $request->has('is_special_case') ? 1 : 0;
-
-        // $attributes['before_image'] = $this->uploadImage($request, null, 'cases/before_images', 'before_image');
-        // $attributes['after_image'] = $this->uploadImage($request, null, 'cases/after_images', 'after_image');
-
-        // SpecialCase::create($attributes);
-
         $attributes['is_special_case'] = $request->has('is_special_case') ? 1 : 0;
 
         //create special case
-        $this->specialCaseService->createSpecialCase($attributes);
+        $this->specialCaseService->createSpecialCase($attributes  , $request);
 
         return redirect()->route('admin.special-cases.index')->with('success', "تمت إضافة حالة بنجاح");
 

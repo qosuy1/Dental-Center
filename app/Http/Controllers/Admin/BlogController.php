@@ -80,7 +80,7 @@ class BlogController extends Controller
             'image' => ['required', 'image'],
         ]);
 
-        $attributes['image'] = $this->uploadImage($request, null, 'plogs/images');
+        $attributes['image'] = $this->uploadImage($request, null, 'uploads/plogs/images');
         $attributes['doctor_name'] = Doctor::find($attributes['doctor_id'])->name;
 
         // dd($attributes);
@@ -126,7 +126,7 @@ class BlogController extends Controller
 
 
         if ($request->hasFile('image'))
-            $attributes['image'] = $this->uploadImage($request, $blog, 'plogs/images');
+            $attributes['image'] = $this->uploadImage($request, $blog, 'uploads/plogs/images');
 
 
         $attributes['doctor_name'] = Doctor::find($attributes['doctor_id'])->name;
@@ -149,8 +149,10 @@ class BlogController extends Controller
         $blog->delete();
 
         //delete blog image
-        if (isset($blog->image))
+        if (file_exists('storage/' . $blog->image))
             Storage::disk('public')->delete($blog->image);
+        elseif (file_exists(public_path($blog->image)))
+            unlink(public_path($blog->image));
 
 
         return redirect()->route('admin.blogs.index')->with([

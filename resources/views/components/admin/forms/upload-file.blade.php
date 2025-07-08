@@ -56,7 +56,7 @@
 
             <div id="file-preview-{{ $fieldNumber }}" style="display: block; margin-top: 15px;">
                 @if ($value)
-                    <img id="preview-image-{{ $fieldNumber }}" src="{{ asset(path: 'storage/' . $value) }}"
+                    <img id="preview-image-{{ $fieldNumber }}" src="{{ asset(path:  $value) }}"
                         alt="Preview" style="max-width: 200px; max-height: 200px;">
                 @else
                     <img id="preview-image-{{ $fieldNumber }}" src="#" alt="Preview"

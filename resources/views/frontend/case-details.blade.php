@@ -17,7 +17,7 @@
             <div class="flex items-center">
                 <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden mr-3">
                     <img id="doctor-image"
-                        src="{{ $case->doctor ? asset('storage/' . $case->doctor->image) : asset('adminAssets/images/avatar/user.jpeg') }}"
+                        src="{{ $case->doctor ? asset(  $case->doctor->image) : asset('adminAssets/images/avatar/user.jpeg') }}"
                         alt="{{ $case->doctor->name ?? $case->doctor_name }}" class="w-full h-full object-cover" />
                 </div>
                 <div>
@@ -57,7 +57,7 @@
                     <div class="after-image absolute inset-0 flex items-center justify-center bg-gray-50">
                         <a href="after-preview.html" class="block w-full h-full relative">
                             <img
-                                src="{{ asset('storage/' . $case->after_image) }}"
+                                src="{{ asset(  $case->after_image) }}"
                                 alt="After Treatment"
                                 class="absolute inset-0 w-full h-full object-cover"
                                 onerror="this.src='https://via.placeholder.com/800x600?text=After+Image+Not+Available'"
@@ -70,7 +70,7 @@
                     </div>
                     <div class="before-image absolute inset-0 flex items-center justify-center bg-gray-50">
                         <img
-                            src="{{ asset('storage/' . $case->before_image) }}"
+                            src="{{ asset(  $case->before_image) }}"
                             alt="Before Treatment"
                             class="absolute inset-0 w-full h-full object-cover"
                             onerror="this.src='https://via.placeholder.com/800x600?text=Before+Image+Not+Available'"

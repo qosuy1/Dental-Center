@@ -13,12 +13,18 @@ trait uploadImageTrait
             return $object->$file_name ?? null;
         }
 
-        $imagePath = $request[$file_name]->store($store_path);
+        // $imagePath = $request[$file_name]->store($store_path);
+        $image = $request->file($file_name);
+        $newFileName = time() . random_int(1, 9999);
+        $image->move(public_path($store_path), $newFileName);
 
         //delete old image
-        if (isset($object->$file_name) && $object->$file_name != $imagePath)
-            Storage::disk('public')->delete($object->$file_name);
+        if (isset($object->$file_name) && $object->$file_name != $newFileName)
+            // Storage::disk('public')->delete($object->$file_name);
+            unlink(public_path($object->$file_name));
 
-        return $imagePath;
+        // return $imagePath;
+        return $store_path . "/" . $newFileName;
+
     }
 }

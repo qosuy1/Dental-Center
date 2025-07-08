@@ -89,7 +89,7 @@ class DoctorController extends Controller
             'linkedin'
         ]);
 
-        $attributes['image'] = $this->uploadImage($request, null, 'doctors/images', );
+        $attributes['image'] = $this->uploadImage($request, null, 'uploads/doctors/images');
 
         Doctor::create($attributes);
 
@@ -128,7 +128,7 @@ class DoctorController extends Controller
 
 
 
-        $attributes['image'] = $this->uploadImage($request, $doctor, 'doctors/images', );
+        $attributes['image'] = $this->uploadImage($request, $doctor, 'uploads/doctors/images', );
 
         $doctor->update($attributes);
 
@@ -144,9 +144,11 @@ class DoctorController extends Controller
     {
         $doctor->delete();
 
-        //delete category image
-        if (isset($doctor->image))
+        //delete doctor image
+        if (file_exists('storage/' . $doctor->image))
             Storage::disk('public')->delete($doctor->image);
+        elseif (file_exists(public_path($doctor->image)))
+            unlink(public_path($doctor->image));
 
         return redirect()->route('admin.doctors.index')
             ->with([

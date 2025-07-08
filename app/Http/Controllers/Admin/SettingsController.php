@@ -48,7 +48,7 @@ class SettingsController extends Controller
 
 
         $settings = Setting::first();
-        $image_path = $this->uploadImage($request, $settings, 'About-Us', 'about_us_image');
+        $image_path = $this->uploadImage($request, $settings, 'uploads/About-Us', 'about_us_image');
         $validator['about_us_image'] = $image_path;
 
         // dd($validator);

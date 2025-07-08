@@ -19,7 +19,7 @@
                 </div>
                 <div class="rounded-lg overflow-hidden">
                     @if ($settings->about_us_image ?? null)
-                        <img src="{{ asset('storage/' . $settings->about_us_image) }}" alt="Our Clinic"
+                        <img src="{{ asset( $settings->about_us_image) }}" alt="Our Clinic"
                             class="w-full h-auto object-cover" />
                     @else
                         <img src="https://www.spsagro.com/images/default_image.jpg" alt="Our Clinic"

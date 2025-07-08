@@ -25,7 +25,7 @@ class FrontendController extends Controller
     public function aboutUs()
     {
         $settings = Setting::all(['google_map_location', 'our_story', 'about_us_image'])->first();
-        $doctors = Doctor::simplePaginate(8);
+        $doctors = Doctor::orderByDesc('created_at')->simplePaginate(8);
         // dd($settings->google_map_location);
         return view('frontend.about-us', compact(['settings', 'doctors']));
     }

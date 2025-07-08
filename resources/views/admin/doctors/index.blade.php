@@ -35,7 +35,7 @@
                                         <div class="flex items-center flex-wrap justify-around gap-3 ">
                                             @if ($doctor->image)
                                                 <div class="image">
-                                                    <img src="{{ asset('storage/' . $doctor->image) }}" alt="user"
+                                                    <img src="{{ asset($doctor->image) }}" alt="user"
                                                         class="rounded-circle"
                                                         style="width: 40px; height: 40px; object-fit: cover;">
                                                 </div>

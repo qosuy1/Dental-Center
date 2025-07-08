@@ -18,7 +18,7 @@
             <div class="flex items-center">
                 <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden mr-3">
                     <img id="doctor-image"
-                        src="{{ $blog->doctor ? asset('storage/' . $blog->doctor->image) : asset('adminAssets/images/avatar/user.jpeg') }}"
+                        src="{{ $blog->doctor ? asset(  $blog->doctor->image) : asset('adminAssets/images/avatar/user.jpeg') }}"
                         alt="{{ $blog->doctor->name ?? $blog->doctor_name }}" class="w-full h-full object-cover" />
                 </div>
                 <div>
@@ -34,7 +34,7 @@
 
         <!-- Blog Main Image (Full Width, Same Design) -->
         <div class="mb-8  overflow-hidden flex justify-center">
-            <img src="{{asset('storage/'. $blog->image)}}" alt="Dental Health"
+            <img src="{{asset(  $blog->image)}}" alt="Dental Health"
                 class=" md:w-[70%] md:h-[70vh]   sm:w-full sm:h-screen object-cover rounded-lg shadow-lg">
         </div>
 
