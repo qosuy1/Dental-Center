@@ -19,7 +19,7 @@ trait uploadImageTrait
         $image->move(public_path($store_path), $newFileName);
 
         //delete old image
-        if (isset($object->$file_name) && $object->$file_name != $newFileName)
+        if (isset($object->$file_name) && $object->$file_name != $newFileName && file_exists(public_path($object->$file_name)))
             // Storage::disk('public')->delete($object->$file_name);
             unlink(public_path($object->$file_name));
 
