@@ -2,29 +2,40 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Cloudinary\Api\Upload\UploadApi;
 use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 trait uploadImageTrait
 {
     // to store the image in the storage
-    public function uploadImage($request, $object = null, $store_path, $file_name = 'image')
+    public function uploadImage($request, $object = null, $store_path, $file_name = 'image'): array
     {
         if (!$request->hasFile($file_name)) {
             return $object->$file_name ?? null;
         }
 
         // $imagePath = $request[$file_name]->store($store_path);
-        $image = $request->file($file_name);
-        $newFileName = time() . random_int(1, 9999);
-        $image->move(public_path($store_path), $newFileName);
+        $uploaded = (new UploadApi())->upload($request->file($file_name)->getRealPath(), [
+            'folder' => 'Dental-center/' . $store_path
+        ]);
 
-        //delete old image
-        if (isset($object->$file_name) && $object->$file_name != $newFileName && file_exists(public_path($object->$file_name)))
-            // Storage::disk('public')->delete($object->$file_name);
-            unlink(public_path($object->$file_name));
+        // dd('hello from upload');
+
+        $imageURL = $uploaded['secure_url']; // ✅ الرابط المباشر الآمن
+        $cloudinary_public_id = $uploaded['public_id']; // ✅ معرف Cloudinary
+
+        // حذف الصورة القديمة من Cloudinary إذا كانت موجودة
+        if ( $object != null && $object->cloudinary_public_id) {
+            // Cloudinary::destroy($object->cloudinary_public_id);
+            (new UploadApi())->destroy($object->cloudinary_public_id);
+        }
 
         // return $imagePath;
-        return $store_path . "/" . $newFileName;
+        return [
+            'imageURL' => $imageURL,
+            'cloudinary_public_id' => $cloudinary_public_id
+        ];
 
     }
 }

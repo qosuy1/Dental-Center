@@ -7,6 +7,8 @@ use App\Models\SpecialCase;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Admin\uploadImageTrait;
+use Cloudinary\Api\Upload\UploadApi;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class SpecialCaseService extends Controller
 {
@@ -17,13 +19,18 @@ class SpecialCaseService extends Controller
         // Handle file uploads
         if (isset($data['before_image'])) {
             // $data['before_image'] = $data['before_image']->store('cases/before_images', 'public');
-            $data['before_image'] = $this->uploadImage($request, null, 'uploads/cases/before_images', 'before_image');
+            $imageToUploadArray = $this->uploadImage($request, null, 'cases/before_images', 'before_image');
+            $data['before_image'] = $imageToUploadArray['imageURL'] ;
+            $data['cloudinary_public_id_before'] = $imageToUploadArray['cloudinary_public_id'];
         }
 
         if (isset($data['after_image'])) {
             // $data['after_image'] = $data['after_image']->store('cases/after_images', 'public');
-            $data['after_image'] = $this->uploadImage($request, null, 'uploads/cases/after_images', 'after_image');
+            // $data['after_image'] = $this->uploadImage($request, null, 'cases/after_images', 'after_image');
 
+            $imageToUploadArray = $this->uploadImage($request, null, 'cases/after_images', 'after_image');
+            $data['after_image'] = $imageToUploadArray['imageURL'];
+            $data['cloudinary_public_id_after'] = $imageToUploadArray['cloudinary_public_id'];
         }
 
 
@@ -41,17 +48,25 @@ class SpecialCaseService extends Controller
     public function deleteCaseWithImages(SpecialCase $case): void
     {
         $case->delete();
-        if (file_exists('storage/' . $case->before_image))
-            Storage::disk('public')->delete($case->before_image);
-        elseif (file_exists(public_path($case->before_image)))
-            unlink(public_path($case->before_image));
+        // // before image delete
+        // if (file_exists('storage/' . $case->before_image))
+        //     Storage::disk('public')->delete($case->before_image);
+        // elseif (file_exists(public_path($case->before_image)))
+        //     unlink(public_path($case->before_image));
 
+        // // after image delete
+        // if (file_exists('storage/' . $case->after_image))
+        //     Storage::disk('public')->delete($case->after_image);
+        // elseif (file_exists(public_path($case->after_image)))
+        //     unlink(public_path($case->after_image));
 
-        if (file_exists('storage/' . $case->after_image))
-            Storage::disk('public')->delete($case->after_image);
-        elseif (file_exists(public_path($case->after_image)))
-            unlink(public_path($case->after_image));
+        if ($case->cloudinary_public_id_before) {
+            (new UploadApi())->destroy($case->cloudinary_public_id_before);
+        }
 
+        if ($case->cloudinary_public_id_after) {
+            (new UploadApi())->destroy($case->cloudinary_public_id_after);
+        }
 
     }
 }

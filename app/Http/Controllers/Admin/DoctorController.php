@@ -10,6 +10,7 @@ use App\Enum\PermissionsEnum;
 use App\Services\DoctorService;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 
 /**
@@ -89,7 +90,10 @@ class DoctorController extends Controller
             'linkedin'
         ]);
 
-        $attributes['image'] = $this->uploadImage($request, null, 'uploads/doctors/images');
+        // upload images
+        $imageToUploadArray = $this->uploadImage($request, null, 'doctors/images');
+        $attributes['image'] = $imageToUploadArray['imageURL'];
+        $attributes['cloudinary_public_id'] = $imageToUploadArray['cloudinary_public_id'];
 
         Doctor::create($attributes);
 
@@ -126,9 +130,11 @@ class DoctorController extends Controller
 
         // dd($request->all());
 
+        // upload images
+        $imageToUploadArray = $this->uploadImage($request, $doctor, 'doctors/images');
+        $attributes['image'] = $imageToUploadArray['imageURL'];
+        $attributes['cloudinary_public_id'] = $imageToUploadArray['cloudinary_public_id'];
 
-
-        $attributes['image'] = $this->uploadImage($request, $doctor, 'uploads/doctors/images', );
 
         $doctor->update($attributes);
 
@@ -145,10 +151,13 @@ class DoctorController extends Controller
         $doctor->delete();
 
         //delete doctor image
-        if (file_exists('storage/' . $doctor->image))
-            Storage::disk('public')->delete($doctor->image);
-        elseif (file_exists(public_path($doctor->image)))
-            unlink(public_path($doctor->image));
+        // if (file_exists('storage/' . $doctor->image))
+        //     Storage::disk('public')->delete($doctor->image);
+        // elseif (file_exists(public_path($doctor->image)))
+        //     unlink(public_path($doctor->image));
+        if ($doctor->cloudinary_public_id) {
+            Cloudinary::destroy($doctor->cloudinary_public_id);
+        }
 
         return redirect()->route('admin.doctors.index')
             ->with([

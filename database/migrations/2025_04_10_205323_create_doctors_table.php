@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('linkedin')->nullable();
             $table->string('facebook')->nullable();
             $table->string('image')->nullable();
+            $table->string('cloudinary_public_id')->nullable();
             $table->foreignIdFor(Department::class);
 
             $table->timestamps();

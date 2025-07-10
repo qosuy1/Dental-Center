@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations
      */
@@ -15,7 +14,7 @@ return new class extends Migration
             $table->text('google_map_location')->after('linkedin')->nullable();
             $table->text('our_story')->after('linkedin');
             $table->string('about_us_image')->after('linkedin')->nullable();
-
+            $table->string('cloudinary_public_id')->nullable();
 
             // $table->text('google_map_location')->nullable();
             // $table->text('our_story')->nullable();
@@ -32,6 +31,7 @@ return new class extends Migration
             $table->dropColumn('google_map_location');
             $table->dropColumn('our_story');
             $table->dropColumn('about_us_image');
+            $table->dropColumn('cloudinary_public_id');
         });
     }
 };

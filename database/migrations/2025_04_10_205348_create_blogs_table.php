@@ -14,11 +14,12 @@ return new class extends Migration
     {
         Schema::create('blogs', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Doctor::class)->default('1');
             $table->string('title');
             $table->longText('content');
             $table->text('smallDesc');
             $table->string('image')->nullable();
-            $table->foreignIdFor(Doctor::class)->default('1');
+            $table->string('cloudinary_public_id')->nullable();
 
             $table->timestamps();
         });

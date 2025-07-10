@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Blog;
+use App\Models\Doctor;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\File;
-use Illuminate\Support\Facades\Storage;
+use App\Enum\PermissionsEnum;
 
 use Illuminate\Routing\Controller;
-use App\Enum\PermissionsEnum;
-use App\Models\Doctor;
+use Illuminate\Validation\Rules\File;
+use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class BlogController extends Controller
 {
@@ -80,7 +81,11 @@ class BlogController extends Controller
             'image' => ['required', 'image'],
         ]);
 
-        $attributes['image'] = $this->uploadImage($request, null, 'uploads/plogs/images');
+        $imageToUploadArray = $this->uploadImage($request, null, 'plogs/images');
+        $attributes['image'] = $imageToUploadArray['imageURL'];
+        $attributes['cloudinary_public_id'] = $imageToUploadArray['cloudinary_public_id'];
+
+
         $attributes['doctor_name'] = Doctor::find($attributes['doctor_id'])->name;
 
         // dd($attributes);
@@ -125,9 +130,11 @@ class BlogController extends Controller
 
 
 
-        if ($request->hasFile('image'))
-            $attributes['image'] = $this->uploadImage($request, $blog, 'uploads/plogs/images');
-
+        if ($request->hasFile('image')) {
+            $imageToUploadArray = $this->uploadImage($request, $blog, 'plogs/images');
+            $attributes['image'] = $imageToUploadArray['imageURL'];
+            $attributes['cloudinary_public_id'] = $imageToUploadArray['cloudinary_public_id'];
+        }
 
         $attributes['doctor_name'] = Doctor::find($attributes['doctor_id'])->name;
 
@@ -149,11 +156,14 @@ class BlogController extends Controller
         $blog->delete();
 
         //delete blog image
-        if (file_exists('storage/' . $blog->image))
-            Storage::disk('public')->delete($blog->image);
-        elseif (file_exists(public_path($blog->image)))
-            unlink(public_path($blog->image));
+        // if (file_exists('storage/' . $blog->image))
+        //     Storage::disk('public')->delete($blog->image);
+        // elseif (file_exists(public_path($blog->image)))
+        //     unlink(public_path($blog->image));
 
+        if ($blog->cloudinary_public_id) {
+            Cloudinary::destroy($blog->cloudinary_public_id);
+        }
 
         return redirect()->route('admin.blogs.index')->with([
             'success' => 'تم الحذف بنجاح',

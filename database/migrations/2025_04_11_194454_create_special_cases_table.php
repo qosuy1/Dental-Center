@@ -24,7 +24,9 @@ return new class extends Migration
             $table->string('result');
             $table->string('feedback')->nullable();
             $table->string('before_image');
+            $table->string('cloudinary_public_id_before')->nullable();
             $table->string('after_image');
+            $table->string('cloudinary_public_id_after')->nullable();
             $table->boolean('is_specail_case');
             $table->timestamps();
         });

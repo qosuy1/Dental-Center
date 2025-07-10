@@ -73,6 +73,7 @@ class SpecialCaseController extends Controller
             ->orderBy('created_at', $sort)
             ->paginate(10);
 
+
         return view('admin.special-cases.index', compact('specialCases'));
     }
 
@@ -129,8 +130,14 @@ class SpecialCaseController extends Controller
 
         // dd($attributes);
 
-        $attributes['before_image'] = $this->uploadImage($request, $specialCase, 'cases/before_images', 'before_image');
-        $attributes['after_image'] = $this->uploadImage($request, $specialCase, 'cases/after_images', 'after_image');
+        $imageToUploadArray = $this->uploadImage($request, $specialCase, 'cases/before_images', 'before_image');
+        $attributes['before_image'] = $imageToUploadArray['imageURL'];
+        $attributes['cloudinary_public_id_before'] = $imageToUploadArray['cloudinary_public_id'];
+
+        $imageToUploadArray = $this->uploadImage($request, null, 'cases/after_images', 'after_image');
+        $attributes['after_image'] = $imageToUploadArray['imageURL'];
+        $attributes['cloudinary_public_id_after'] = $imageToUploadArray['cloudinary_public_id'];
+
 
         $attributes['doctor_name'] = Doctor::find($attributes['doctor_id'])->name;
 
