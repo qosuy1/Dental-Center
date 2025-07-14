@@ -56,13 +56,13 @@
                                     <td>{{ $case->doctor->name ?? $case->doctor_name }}</td>
                                     <td>
                                         @if ($case->before_image)
-                                            <img src="{{ asset($case->before_image) }}" alt="Before"
+                                            <img src="{{ $case->before_image }}" alt="Before"
                                                 style="width: 60px; height: 60px; object-fit: cover;">
                                         @endif
                                     </td>
                                     <td>
                                         @if ($case->after_image)
-                                            <img src="{{ asset($case->after_image) }}" alt="After"
+                                            <img src="{{ $case->after_image }}" alt="After"
                                                 style="width: 60px; height: 60px; object-fit: cover;">
                                         @endif
                                     </td>

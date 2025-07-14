@@ -7,6 +7,8 @@ use App\Models\Doctor;
 use Illuminate\Http\Request;
 use App\Enum\PermissionsEnum;
 
+use App\Jobs\ProcessDeleteImage;
+use App\Jobs\ProcessImageUploade;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Support\Facades\Storage;
@@ -81,17 +83,24 @@ class BlogController extends Controller
             'image' => ['required', 'image'],
         ]);
 
-        $imageToUploadArray = $this->uploadImage($request, null, 'plogs/images');
-        $attributes['image'] = $imageToUploadArray['imageURL'];
-        $attributes['cloudinary_public_id'] = $imageToUploadArray['cloudinary_public_id'];
 
 
         $attributes['doctor_name'] = Doctor::find($attributes['doctor_id'])->name;
+        $attributes['image'] = " ";
+        $blog =  Blog::create($attributes);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('temp_uploads', $filename, 'local'); // storage/app/temp_uploads/xxx.jpg
+            $fullPath = storage_path('app/private/' . $path);
+            // dd(storage_path('app/' . $path));
+            ProcessImageUploade::dispatch($blog, $fullPath, 'blogs/images');
+        }
 
         // dd($attributes);
 
 
-        Blog::create($attributes);
         return redirect()->route('admin.blogs.index')->with('success', "تمت إضافة المقال بنجاح");
     }
 
@@ -130,19 +139,23 @@ class BlogController extends Controller
 
 
 
-        if ($request->hasFile('image')) {
-            $imageToUploadArray = $this->uploadImage($request, $blog, 'plogs/images');
-            $attributes['image'] = $imageToUploadArray['imageURL'];
-            $attributes['cloudinary_public_id'] = $imageToUploadArray['cloudinary_public_id'];
-        }
-
         $attributes['doctor_name'] = Doctor::find($attributes['doctor_id'])->name;
+        $attributes['image'] = " " ;
+        $blog->update($attributes);
 
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('temp_uploads', $filename, 'local'); // storage/app/temp_uploads/xxx.jpg
+            $fullPath = storage_path('app/private/' . $path);
+            // dd(storage_path('app/' . $path));
+            ProcessImageUploade::dispatch($blog, $fullPath, 'blogs/images');
+        }
         // //delete old image
         // if (isset($blog->image) && $blog->image != $attributes['image'])
         //     Storage::disk('public')->delete($blog->image);
 
-        $blog->update($attributes);
 
         // and presist
         return redirect()->route('admin.blogs.show', $blog)->with('success', "تم تعديل المقال بنجاح");
@@ -162,7 +175,7 @@ class BlogController extends Controller
         //     unlink(public_path($blog->image));
 
         if ($blog->cloudinary_public_id) {
-            Cloudinary::destroy($blog->cloudinary_public_id);
+            ProcessDeleteImage::dispatch($blog->cloudinary_public_id);
         }
 
         return redirect()->route('admin.blogs.index')->with([

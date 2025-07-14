@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Jobs\ProcessImageUploade;
 use App\Models\Doctor;
 use App\Models\Department;
 // use GuzzleHttp\Middleware;
+use Cloudinary\Api\Upload\UploadApi;
 use Illuminate\Http\Request;
 use App\Enum\PermissionsEnum;
+use App\Jobs\ProcessDeleteImage;
 use App\Services\DoctorService;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -91,11 +94,23 @@ class DoctorController extends Controller
         ]);
 
         // upload images
-        $imageToUploadArray = $this->uploadImage($request, null, 'doctors/images');
-        $attributes['image'] = $imageToUploadArray['imageURL'];
-        $attributes['cloudinary_public_id'] = $imageToUploadArray['cloudinary_public_id'];
+        // $imageToUploadArray = $this->uploadImage($request, null, 'doctors/images');
+        // $attributes['image'] = $imageToUploadArray['imageURL'];
+        // $attributes['cloudinary_public_id'] = $imageToUploadArray['cloudinary_public_id'];
 
-        Doctor::create($attributes);
+
+        $attributes['image'] = " ";
+        $doctor = Doctor::create($attributes);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('temp_uploads', $filename, 'local'); // storage/app/temp_uploads/xxx.jpg
+            $fullPath = storage_path('app/private/' . $path);
+            // dd(storage_path('app/' . $path));
+            ProcessImageUploade::dispatch($doctor, $fullPath, 'doctors/images');
+        }
+
 
         return redirect()->route('admin.doctors.index')->with('success', "تمت إضافة الطبيب بنجاح");
 
@@ -130,13 +145,22 @@ class DoctorController extends Controller
 
         // dd($request->all());
 
-        // upload images
-        $imageToUploadArray = $this->uploadImage($request, $doctor, 'doctors/images');
-        $attributes['image'] = $imageToUploadArray['imageURL'];
-        $attributes['cloudinary_public_id'] = $imageToUploadArray['cloudinary_public_id'];
-
+        // $imageToUploadArray = $this->uploadImage($request, $doctor, 'doctors/images');
+        // $attributes['image'] = $imageToUploadArray['imageURL'];
+        // $attributes['cloudinary_public_id'] = $imageToUploadArray['cloudinary_public_id'];
 
         $doctor->update($attributes);
+
+        // upload images
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('temp_uploads', $filename, 'local'); // storage/app/temp_uploads/xxx.jpg
+            $fullPath = storage_path('app/private/' . $path);
+            // dd(storage_path('app/' . $path));
+            ProcessImageUploade::dispatch($doctor, $fullPath, 'doctors/images');
+        }
+
 
         return redirect()->route('admin.doctors.index')->with('success', "تمت تعديل الطبيب بنجاح");
 
@@ -155,8 +179,10 @@ class DoctorController extends Controller
         //     Storage::disk('public')->delete($doctor->image);
         // elseif (file_exists(public_path($doctor->image)))
         //     unlink(public_path($doctor->image));
+
         if ($doctor->cloudinary_public_id) {
-            Cloudinary::destroy($doctor->cloudinary_public_id);
+            // (new UploadApi())->destroy($doctor->cloudinary_public_id);
+            ProcessDeleteImage::dispatch($doctor->cloudinary_public_id);
         }
 
         return redirect()->route('admin.doctors.index')

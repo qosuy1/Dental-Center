@@ -19,8 +19,9 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # Link storage to public
-RUN php artisan storage:link
+# RUN php artisan storage:link
 
+RUN php artisan queue:work
 
 # إعطاء صلاحيات للمجلدات المطلوبة
 RUN chmod -R 775 storage bootstrap/cache

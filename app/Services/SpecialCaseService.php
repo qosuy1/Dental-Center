@@ -2,70 +2,147 @@
 
 namespace App\Services;
 
+use App\Jobs\ProcessDeleteImage;
 use App\Models\Doctor;
 use App\Models\SpecialCase;
+use App\Jobs\ProcessImageUploade;
 use Illuminate\Routing\Controller;
+use Cloudinary\Api\Upload\UploadApi;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Admin\uploadImageTrait;
-use Cloudinary\Api\Upload\UploadApi;
+use App\Http\Requests\SpecialCaseRequest;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\Request;
 
 class SpecialCaseService extends Controller
 {
     use uploadImageTrait;
 
-    public function createSpecialCase(array $data, $request = null): SpecialCase
+    public function createSpecialCase(array $data, SpecialCaseRequest $request)
     {
-        // Handle file uploads
-        if (isset($data['before_image'])) {
-            // $data['before_image'] = $data['before_image']->store('cases/before_images', 'public');
-            $imageToUploadArray = $this->uploadImage($request, null, 'cases/before_images', 'before_image');
-            $data['before_image'] = $imageToUploadArray['imageURL'] ;
-            $data['cloudinary_public_id_before'] = $imageToUploadArray['cloudinary_public_id'];
-        }
 
-        if (isset($data['after_image'])) {
-            // $data['after_image'] = $data['after_image']->store('cases/after_images', 'public');
-            // $data['after_image'] = $this->uploadImage($request, null, 'cases/after_images', 'after_image');
-
-            $imageToUploadArray = $this->uploadImage($request, null, 'cases/after_images', 'after_image');
-            $data['after_image'] = $imageToUploadArray['imageURL'];
-            $data['cloudinary_public_id_after'] = $imageToUploadArray['cloudinary_public_id'];
-        }
-
-
-
-
+        $data['before_image'] = " ";
+        $data['after_image'] = " ";
         // Handle boolean field
         $data['is_special_case'] = isset($data['is_special_case']) ? 1 : 0;
 
         $data['doctor_name'] = Doctor::find($data['doctor_id'])->name;
 
+
         // Save to database
-        return SpecialCase::create($data);
+        $case = SpecialCase::create($data);
+
+
+        // Handle file uploads
+        if ($request->has('before_image')) {
+            # V1
+            // $data['before_image'] = $data['before_image']->store('cases/before_images', 'public');
+
+            #V2
+            // $imageToUploadArray = $this->uploadImage($request, null, 'cases/before_images', 'before_image');
+            // $data['before_image'] = $imageToUploadArray['imageURL'] ;
+            // $data['cloudinary_public_id_before'] = $imageToUploadArray['cloudinary_public_id'];
+
+            #V3
+            $file = $request->file('before_image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('temp_uploads', $filename, 'local'); // storage/app/temp_uploads/xxx.jpg
+            $fullPath = storage_path('app/private/' . $path);
+            ProcessImageUploade::dispatch($case, $fullPath, 'cases/before_images' , 'before_image' , 'cloudinary_public_id_before');
+
+        }
+
+        if ($request->has('after_image')) {
+            #V1
+            // $data['after_image'] = $data['after_image']->store('cases/after_images', 'public');
+
+            #V2
+            // $imageToUploadArray = $this->uploadImage($request, null, 'cases/after_images', 'after_image');
+            // $data['after_image'] = $imageToUploadArray['imageURL'];
+            // $data['cloudinary_public_id_after'] = $imageToUploadArray['cloudinary_public_id'];
+
+            #V3
+            $file = $request->file('after_image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('temp_uploads', $filename, 'local'); // storage/app/temp_uploads/xxx.jpg
+            $fullPath = storage_path('app/private/' . $path);
+            ProcessImageUploade::dispatch($case, $fullPath, 'cases/after_images' ,  'after_image' , 'cloudinary_public_id_after');
+
+        }
+
+
+    }
+
+    public function updateSpecialCase(array $data, SpecialCaseRequest $request , SpecialCase $case)
+    {
+
+        $data['doctor_name'] = Doctor::find($data['doctor_id'])->name;
+        $data['is_special_case'] = $request->has('is_special_case') ? 1 : 0;
+
+
+        // Save to database
+        $case->update($data);
+
+
+        // Handle file uploads
+        if ($request->has('before_image')) {
+            # V1
+            // $data['before_image'] = $data['before_image']->store('cases/before_images', 'public');
+
+            #V2
+            // $imageToUploadArray = $this->uploadImage($request, null, 'cases/before_images', 'before_image');
+            // $data['before_image'] = $imageToUploadArray['imageURL'] ;
+            // $data['cloudinary_public_id_before'] = $imageToUploadArray['cloudinary_public_id'];
+
+            #V3
+            $file = $request->file('before_image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('temp_uploads', $filename, 'local'); // storage/app/temp_uploads/xxx.jpg
+            $fullPath = storage_path('app/private/' . $path);
+            ProcessImageUploade::dispatch($case, $fullPath, 'cases/before_images' , 'before_image' , 'cloudinary_public_id_before');
+
+        }
+
+        if ($request->has('after_image')) {
+            #V1
+            // $data['after_image'] = $data['after_image']->store('cases/after_images', 'public');
+
+            #V2
+            // $imageToUploadArray = $this->uploadImage($request, null, 'cases/after_images', 'after_image');
+            // $data['after_image'] = $imageToUploadArray['imageURL'];
+            // $data['cloudinary_public_id_after'] = $imageToUploadArray['cloudinary_public_id'];
+
+            #V3
+            $file = $request->file('after_image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('temp_uploads', $filename, 'local'); // storage/app/temp_uploads/xxx.jpg
+            $fullPath = storage_path('app/private/' . $path);
+            ProcessImageUploade::dispatch($case, $fullPath, 'cases/after_images' ,  'before_image' , 'cloudinary_public_id_before');
+
+        }
+
+
     }
 
     public function deleteCaseWithImages(SpecialCase $case): void
     {
         $case->delete();
-        // // before image delete
-        // if (file_exists('storage/' . $case->before_image))
-        //     Storage::disk('public')->delete($case->before_image);
-        // elseif (file_exists(public_path($case->before_image)))
-        //     unlink(public_path($case->before_image));
 
-        // // after image delete
-        // if (file_exists('storage/' . $case->after_image))
-        //     Storage::disk('public')->delete($case->after_image);
-        // elseif (file_exists(public_path($case->after_image)))
-        //     unlink(public_path($case->after_image));
 
         if ($case->cloudinary_public_id_before) {
-            (new UploadApi())->destroy($case->cloudinary_public_id_before);
+            #V2
+            // (new UploadApi())->destroy($case->cloudinary_public_id_before);
+
+            #V3
+            ProcessDeleteImage::dispatch($case->cloudinary_public_id_before);
         }
 
         if ($case->cloudinary_public_id_after) {
-            (new UploadApi())->destroy($case->cloudinary_public_id_after);
+            #V2
+            // (new UploadApi())->destroy($case->cloudinary_public_id_after);
+
+            #V3
+            ProcessDeleteImage::dispatch($case->cloudinary_public_id_after);
         }
 
     }

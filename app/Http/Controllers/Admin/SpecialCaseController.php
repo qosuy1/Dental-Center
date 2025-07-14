@@ -126,22 +126,20 @@ class SpecialCaseController extends Controller
     {
         $attributes = $request->validated();
 
-        $attributes['is_special_case'] = $request->has('is_special_case') ? 1 : 0;
+        $this->specialCaseService->updateSpecialCase($attributes , $request  , $specialCase);
 
-        // dd($attributes);
+        // $imageToUploadArray = $this->uploadImage($request, $specialCase, 'cases/before_images', 'before_image');
+        // $attributes['before_image'] = $imageToUploadArray['imageURL'];
+        // $attributes['cloudinary_public_id_before'] = $imageToUploadArray['cloudinary_public_id'];
 
-        $imageToUploadArray = $this->uploadImage($request, $specialCase, 'cases/before_images', 'before_image');
-        $attributes['before_image'] = $imageToUploadArray['imageURL'];
-        $attributes['cloudinary_public_id_before'] = $imageToUploadArray['cloudinary_public_id'];
-
-        $imageToUploadArray = $this->uploadImage($request, null, 'cases/after_images', 'after_image');
-        $attributes['after_image'] = $imageToUploadArray['imageURL'];
-        $attributes['cloudinary_public_id_after'] = $imageToUploadArray['cloudinary_public_id'];
+        // $imageToUploadArray = $this->uploadImage($request, null, 'cases/after_images', 'after_image');
+        // $attributes['after_image'] = $imageToUploadArray['imageURL'];
+        // $attributes['cloudinary_public_id_after'] = $imageToUploadArray['cloudinary_public_id'];
 
 
-        $attributes['doctor_name'] = Doctor::find($attributes['doctor_id'])->name;
+        // $attributes['doctor_name'] = Doctor::find($attributes['doctor_id'])->name;
 
-        $specialCase->update($attributes);
+        // $specialCase->update($attributes);
 
         return redirect()->route('admin.special-cases.index')->with('success', "تمت تعديل الحالة بنجاح");
     }
